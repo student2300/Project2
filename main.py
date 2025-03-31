@@ -31,7 +31,7 @@ def query_LLM(query:str):
             "model": "gpt-4o-mini",
             "messages": [
                 {"role": "system", "content": "Keep your answers precise, do not explain the procces also avoid any markdown in it."},
-                {"role": "system", "content": "Also if any files are asked to be downloaded consider that all of them were downloaded before the query and are save in \'./tmp\' folder."},
+                {"role": "system", "content": "Also if any files are asked to be downloaded consider that all of them were downloaded before the query and are save in \'/tmp\' folder."},
                 {"role": "user", "content": query}
             ]
         }
@@ -270,7 +270,7 @@ def LLM_function_calling(question:str):
 @app.post('/api')
 async def echolarge(question: str = Form(...), files: list[UploadFile] = File(...)):
     for file in files:
-        fname = f'./tmp/{file.filename}'
+        fname = f'/tmp/{file.filename}'
         with open(fname, 'wb') as buffer:
             buffer.write(await file.read())
         firstResponse = LLM_function_calling(question)
