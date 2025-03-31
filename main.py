@@ -18,8 +18,7 @@ AIPROXY_TOKEN = os.getenv('AIPROXY_TOKEN')
 AIPROXY_URL ='https://aiproxy.sanand.workers.dev/openai/v1/chat/completions'
 
 PWD = os.getcwd()
-tmp_DIR = os.path.join(PWD, 'tmp')
-os.mkdir(tmp_DIR)
+
 
 
 
@@ -270,7 +269,7 @@ def LLM_function_calling(question:str):
 @app.post('/api')
 async def echolarge(question: str = Form(...), files: list[UploadFile] = File(...)):
     for file in files:
-        fname = f'/tmp/{file.filename}'
+        fname = f'./tmp/{file.filename}'
         with open(fname, 'wb') as buffer:
             buffer.write(await file.read())
         firstResponse = LLM_function_calling(question)
