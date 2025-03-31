@@ -16,11 +16,11 @@ import sqlite3
 
 AIPROXY_TOKEN = os.getenv('AIPROXY_TOKEN')
 AIPROXY_URL ='https://aiproxy.sanand.workers.dev/openai/v1/chat/completions'
-tmp_DIR = Path("tmp")
-tmp_DIR.mkdir(parents=True, exist_ok=True)
-print(tmp_DIR)
 
 PWD = os.getcwd()
+tmp_DIR = os.path.join(PWD, 'tmp')
+os.mkdir(tmp_DIR)
+
 
 
 def query_LLM(query:str):
