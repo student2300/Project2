@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from typing import Annotated
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,9 +16,9 @@ import sqlite3
 
 AIPROXY_TOKEN = os.getenv('AIPROXY_TOKEN')
 AIPROXY_URL ='https://aiproxy.sanand.workers.dev/openai/v1/chat/completions'
-TEMP_DIR = Path("TEMP")
-TEMP_DIR.mkdir(parents=True, exist_ok=True)
-print(TEMP_DIR)
+tmp_DIR = Path("tmp")
+tmp_DIR.mkdir(parents=True, exist_ok=True)
+print(tmp_DIR)
 
 PWD = os.getcwd()
 
@@ -32,7 +31,7 @@ def query_LLM(query:str):
             "model": "gpt-4o-mini",
             "messages": [
                 {"role": "system", "content": "Keep your answers precise, do not explain the procces also avoid any markdown in it."},
-                {"role": "system", "content": "Also if any files are asked to be downloaded consider that all of them were downloaded before the query and are save in \'./TEMP\' folder."},
+                {"role": "system", "content": "Also if any files are asked to be downloaded consider that all of them were downloaded before the query and are save in \'./tmp\' folder."},
                 {"role": "user", "content": query}
             ]
         }
@@ -44,7 +43,7 @@ def create_py(fname, code):
         pyfile.write(code)
     return run_command(f'python {fname}').strip()
 
-def extract_zip(file, output_folder='TEMP'):
+def extract_zip(file, output_folder='tmp'):
     with ZipFile(file, 'r') as zp:
         zp.printdir()
         zp.extractall(output_folder)
@@ -271,7 +270,7 @@ def LLM_function_calling(question:str):
 @app.post('/api')
 async def echolarge(question: str = Form(...), files: list[UploadFile] = File(...)):
     for file in files:
-        fname = f'./TEMP/{file.filename}'
+        fname = f'./tmp/{file.filename}'
         with open(fname, 'wb') as buffer:
             buffer.write(await file.read())
         firstResponse = LLM_function_calling(question)
